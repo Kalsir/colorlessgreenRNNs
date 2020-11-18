@@ -161,7 +161,7 @@ try:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
             lr /= 4.0
 
-    torch.save(model.state_dict(), os.path.join(args.save, f"{epoch}.pt"))
+        torch.save(model.state_dict(), os.path.join(args.save, f"{epoch}.pt"))
 
 except KeyboardInterrupt:
     logging.info('-' * 89)
@@ -169,7 +169,7 @@ except KeyboardInterrupt:
 
 if best_epoch != -1:
     # Load the best saved model.
-    model.load_state_dict(torch.load(os.path.join(args.save, f"{epoch}.pt")))
+    model.load_state_dict(torch.load(os.path.join(args.save, f"{best_epoch}.pt")))
 
     # Run on test data.
     test_loss = evaluate(test_data)

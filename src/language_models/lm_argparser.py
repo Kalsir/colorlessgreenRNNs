@@ -41,12 +41,12 @@ lm_parser.add_argument('--bptt', type=int, default=35,
 
 lm_parser.add_argument('--seed', type=int, default=1111,
                        help='random seed')
-lm_parser.add_argument('--cuda', action='store_false',
+lm_parser.add_argument('--cuda', action='store_true',
                        help='use CUDA')
 lm_parser.add_argument('--log-interval', type=int, default=1000, metavar='N',
                        help='report interval')
 lm_parser.add_argument('--save', type=str, default='models',
-                       help='path to save the final model')
+                       help='directory to store the models')
 lm_parser.add_argument('--log', type=str, default='log.txt',
                        help='path to logging file')
 
