@@ -9,6 +9,7 @@ import argparse
 import logging
 import math
 import time
+import os
 
 import torch
 import torch.nn as nn
@@ -34,6 +35,10 @@ if torch.cuda.is_available():
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
     else:
         torch.cuda.manual_seed(args.seed)
+
+if not os.path.exists(args.save):
+    print("Save dir does not exist!")
+    os.makedirs(args.save)
 
 ###############################################################################
 # Load data
@@ -132,6 +137,7 @@ def train():
 # Loop over epochs.
 lr = args.lr
 best_val_loss = None
+best_epoch = -1
 
 # At any point you can hit Ctrl + C to break out of training early.
 try:
@@ -147,23 +153,27 @@ try:
                                            val_loss, math.exp(val_loss)))
         logging.info('-' * 89)
         # Save the model if the validation loss is the best we've seen so far.
+        # torch.save(model.state_dict(), os.path.join(args.save, f"{epoch}.pt"))
         if not best_val_loss or val_loss < best_val_loss:
-            with open(args.save, 'wb') as f:
-                torch.save(model, f)
+            best_epoch = epoch
             best_val_loss = val_loss
         else:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
             lr /= 4.0
+
+    torch.save(model.state_dict(), os.path.join(args.save, f"{epoch}.pt"))
+
 except KeyboardInterrupt:
     logging.info('-' * 89)
     logging.info('Exiting from training early')
 
-# Load the best saved model.
-with open(args.save, 'rb') as f:
-    model = torch.load(f)
+if best_epoch != -1:
+    # Load the best saved model.
+    model.load_state_dict(torch.load(os.path.join(args.save, f"{epoch}.pt")))
 
-# Run on test data.
-test_loss = evaluate(test_data)
-logging.info('=' * 89)
-logging.info('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(test_loss, math.exp(test_loss)))
-logging.info('=' * 89)
+    # Run on test data.
+    test_loss = evaluate(test_data)
+    logging.info('=' * 89)
+    logging.info('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(test_loss, math.exp(test_loss)))
+    logging.info('=' * 89)
+

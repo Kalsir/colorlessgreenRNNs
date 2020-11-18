@@ -15,9 +15,9 @@ lm_parser.add_argument('--data', type=str,
 
 lm_parser.add_argument('--model', type=str, default='LSTM',
                        help='type of recurrent net (RNN_TANH, RNN_RELU, LSTM, GRU)')
-lm_parser.add_argument('--emsize', type=int, default=200,
+lm_parser.add_argument('--emsize', type=int, default=650,
                        help='size of word embeddings')
-lm_parser.add_argument('--nhid', type=int, default=200,
+lm_parser.add_argument('--nhid', type=int, default=650,
                        help='number of hidden units per layer')
 lm_parser.add_argument('--nlayers', type=int, default=2,
                        help='number of layers')
@@ -41,11 +41,12 @@ lm_parser.add_argument('--bptt', type=int, default=35,
 
 lm_parser.add_argument('--seed', type=int, default=1111,
                        help='random seed')
-lm_parser.add_argument('--cuda', action='store_true',
+lm_parser.add_argument('--cuda', action='store_false',
                        help='use CUDA')
-lm_parser.add_argument('--log-interval', type=int, default=200, metavar='N',
+lm_parser.add_argument('--log-interval', type=int, default=1000, metavar='N',
                        help='report interval')
-lm_parser.add_argument('--save', type=str, default='model.pt',
+lm_parser.add_argument('--save', type=str, default='models',
                        help='path to save the final model')
 lm_parser.add_argument('--log', type=str, default='log.txt',
                        help='path to logging file')
+
